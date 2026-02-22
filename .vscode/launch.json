@@ -5,7 +5,23 @@
     "version": "0.2.0",
         "configurations": [
         {
-            "name": "Flutter: Launch on Medium_Phone_API_35",
+            "name": "Run on Medium_Phone_API_35(no debug)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "preLaunchTask": "wait-for-emulator",
+            "flutterMode": "release",
+            "noDebug": true,
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Run (simple) on Medium_Phone_API_35(no debug)",
+            "type": "dart",
+            "request": "launch",
+            "preLaunchTask": "run-on-medium-emulator-simple"
+        },
+        {
+            "name": "Debug on Medium_Phone_API_35",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",

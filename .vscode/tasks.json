@@ -61,6 +61,20 @@
         "panel": "dedicated"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "run-on-medium-emulator-simple",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "flutter emulators --launch Medium_Phone_API_35 && flutter run --release"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
     }
   ]
 }
