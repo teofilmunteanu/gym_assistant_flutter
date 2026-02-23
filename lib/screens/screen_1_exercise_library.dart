@@ -17,7 +17,7 @@ class Screen1ExerciseLibrary extends StatelessWidget {
 
           children: [
             const Icon(
-              Icons.fitness_center,
+              Icons.library_books,
               size: 80,
               color: Colors.deepPurple,
             ),

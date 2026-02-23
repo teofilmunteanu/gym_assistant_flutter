@@ -17,7 +17,7 @@ class Screen3WorkoutsHistory extends StatelessWidget {
 
           children: [
             const Icon(
-              Icons.restaurant,
+              Icons.history,
               size: 80,
               color: Colors.deepPurple,
             ),

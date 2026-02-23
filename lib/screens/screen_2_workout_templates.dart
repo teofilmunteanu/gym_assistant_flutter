@@ -17,7 +17,7 @@ class Screen2WorkoutTemplates extends StatelessWidget {
 
           children: [
             const Icon(
-              Icons.trending_up,
+              Icons.edit_calendar,
               size: 80,
               color: Colors.deepPurple,
             ),
