@@ -4,6 +4,7 @@ import 'screens/screen_1_exercise_library.dart';
 import 'screens/screen_2_workout_templates.dart';
 import 'screens/screen_3_workouts_history.dart';
 import 'screens/screen_4_settings.dart';
+import 'screens/screen_5_add_exercise.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/screen2': (context) => const Screen2WorkoutTemplates(),
         '/screen3': (context) => const Screen3WorkoutsHistory(),
         '/screen4': (context) => const Screen4Settings(),
+        '/screen5': (context) => const Screen5AddExercise(),
       },
     );
   }
