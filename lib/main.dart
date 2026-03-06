@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'services/muscle_service.dart';
 import 'screens/main_menu.dart';
 import 'screens/screen_1_exercise_library.dart';
 import 'screens/screen_2_workout_templates.dart';
@@ -6,7 +7,9 @@ import 'screens/screen_3_workouts_history.dart';
 import 'screens/screen_4_settings.dart';
 import 'screens/screen_5_add_exercise.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MuscleService().init();
   runApp(const MyApp());
 }
 

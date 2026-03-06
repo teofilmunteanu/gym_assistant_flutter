@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gym_assistant_flutter/models/muscle_model.dart';
+import 'package:gym_assistant_flutter/services/muscle_service.dart';
 
 class Screen5AddExercise extends StatefulWidget {
   const Screen5AddExercise({super.key});
@@ -8,22 +10,11 @@ class Screen5AddExercise extends StatefulWidget {
 }
 
 class _Screen5AddExerciseState extends State<Screen5AddExercise> {
+  String? selectedMuscleCategory;
   String? selectedMuscleGroup;
+  String? selectedMuscleSubgroup;
   
-  final List<String> muscleGroups = [
-    'Chest',
-    'Back',
-    'Shoulders',
-    'Biceps',
-    'Triceps',
-    'Forearms',
-    'Legs',
-    'Quadriceps',
-    'Hamstrings',
-    'Glutes',
-    'Calves',
-    'Abs',
-  ];
+  final List<MuscleNode> muscleCategories = MuscleService().getCategories();
 
   @override
   Widget build(BuildContext context) {
@@ -61,23 +52,25 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
               
               child: Column(
                 children: [
-                  // Muscle group dropdown menu
+                  // Muscle category dropdown menu
                   DropdownButtonFormField<String>(
-                    initialValue: selectedMuscleGroup,
-                    hint: const Text('Select a muscle group'),
+                    initialValue: selectedMuscleCategory,
+                    hint: const Text('Select a muscle category'),
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Muscle Group',
+                      labelText: 'Muscle Category',
                     ),
-                    items: muscleGroups.map((String group) {
+                    items: muscleCategories.map((MuscleNode node) {
                       return DropdownMenuItem<String>(
-                        value: group,
-                        child: Text(group),
+                        value: node.id,
+                        child: Text(node.name),
                       );
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedMuscleGroup = newValue;
+                        selectedMuscleCategory = newValue;
+                        selectedMuscleGroup = null;
+                        selectedMuscleSubgroup = null;
                       });
                     },
                     validator: (value) {
@@ -89,6 +82,61 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
                   ),
 
                   const SizedBox(height: 20),
+
+                  // Muscle group dropdown (only visible if category selected)
+                  if (selectedMuscleCategory != null)
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedMuscleGroup,
+                      hint: const Text('Select a muscle group'),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Muscle Group',
+                      ),
+                      items: MuscleService()
+                          .getGroupsForCategory(selectedMuscleCategory!)
+                          .map((MuscleNode node) {
+                        return DropdownMenuItem<String>(
+                          value: node.id,
+                          child: Text(node.name),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedMuscleGroup = newValue;
+                          selectedMuscleSubgroup = null;
+                        });
+                      },
+                    ),
+
+                  if (selectedMuscleCategory != null) const SizedBox(height: 20),
+
+                  // Muscle subgroup dropdown (only visible if group selected and has children)
+                  if (selectedMuscleCategory != null && 
+                      selectedMuscleGroup != null &&
+                      MuscleService().getChildrenForNode(selectedMuscleCategory!, selectedMuscleGroup!).isNotEmpty)
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedMuscleSubgroup,
+                      hint: const Text('Select a muscle subgroup'),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Muscle Subgroup',
+                      ),
+                      items: MuscleService()
+                          .getChildrenForNode(selectedMuscleCategory!, selectedMuscleGroup!)
+                          .map((MuscleNode node) {
+                        return DropdownMenuItem<String>(
+                          value: node.id,
+                          child: Text(node.name),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedMuscleSubgroup = newValue;
+                        });
+                      },
+                    ),
+
+                  if (selectedMuscleCategory != null && selectedMuscleGroup != null && MuscleService().getChildrenForNode(selectedMuscleCategory!, selectedMuscleGroup!).isNotEmpty) const SizedBox(height: 20),
 
                   // Exercise name input
                   TextFormField(
