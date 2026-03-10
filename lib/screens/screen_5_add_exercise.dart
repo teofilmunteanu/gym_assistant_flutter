@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gym_assistant_flutter/models/muscle_model.dart';
 import 'package:gym_assistant_flutter/services/muscle_service.dart';
+import 'package:gym_assistant_flutter/services/exercise_service.dart';
 
 class Screen5AddExercise extends StatefulWidget {
-  const Screen5AddExercise({super.key});
+  final String? exerciseId;
+
+  const Screen5AddExercise({super.key, this.exerciseId});
 
   @override
   State<Screen5AddExercise> createState() => _Screen5AddExerciseState();
@@ -14,13 +17,49 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
   String? selectedMuscleGroup;
   String? selectedMuscleSubgroup;
   
+  late TextEditingController exerciseNameController;
+  late TextEditingController exerciseDescriptionController;
+  
   final List<MuscleNode> muscleCategories = MuscleService().getCategories();
+  final _exerciseService = ExerciseService();
+
+  @override
+  void initState() {
+    super.initState();
+    exerciseNameController = TextEditingController();
+    exerciseDescriptionController = TextEditingController();
+    
+    // If editing, load the exercise data
+    if (widget.exerciseId != null) {
+      _loadExerciseData();
+    }
+  }
+
+  void _loadExerciseData() {
+    final exercise = _exerciseService
+        .getAllExercises()
+        .firstWhere((e) => e.id == widget.exerciseId);
+    
+    exerciseNameController.text = exercise.name;
+    exerciseDescriptionController.text = exercise.description;
+    selectedMuscleCategory = exercise.muscleCategoryId;
+    selectedMuscleGroup = exercise.muscleGroupId;
+    selectedMuscleSubgroup = exercise.muscleSubgroupId;
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    exerciseNameController.dispose();
+    exerciseDescriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Exercise'),
+        title: Text(widget.exerciseId != null ? 'Edit Exercise' : 'Add Exercise'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
 
@@ -140,6 +179,7 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
 
                   // Exercise name input
                   TextFormField(
+                    controller: exerciseNameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Exercise Name',
@@ -156,6 +196,7 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
 
                   // Exercise description input
                   TextFormField(
+                    controller: exerciseDescriptionController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Exercise Description',
@@ -176,9 +217,7 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
             
             // Save button whichs will add the exercise to the library
             ElevatedButton(
-              onPressed: () {
-                // Add exercise to library
-              },
+              onPressed: () => _saveExercise(),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 30,
@@ -206,6 +245,72 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> _saveExercise() async {
+    // Validate all required fields
+    if (exerciseNameController.text.isEmpty) {
+      _showError('Please enter an exercise name');
+      return;
+    }
+
+    if (exerciseDescriptionController.text.isEmpty) {
+      _showError('Please enter an exercise description');
+      return;
+    }
+
+    if (selectedMuscleCategory == null) {
+      _showError('Please select a muscle category');
+      return;
+    }
+
+    if (selectedMuscleGroup == null) {
+      _showError('Please select a muscle group');
+      return;
+    }
+
+    // Save or update the exercise
+    if (widget.exerciseId != null) {
+      await _exerciseService.updateExercise(
+        id: widget.exerciseId!,
+        name: exerciseNameController.text,
+        description: exerciseDescriptionController.text,
+        muscleCategoryId: selectedMuscleCategory!,
+        muscleGroupId: selectedMuscleGroup!,
+        muscleSubgroupId: selectedMuscleSubgroup,
+      );
+    } else {
+      _exerciseService.saveExercise(
+        name: exerciseNameController.text,
+        description: exerciseDescriptionController.text,
+        muscleCategoryId: selectedMuscleCategory!,
+        muscleGroupId: selectedMuscleGroup!,
+        muscleSubgroupId: selectedMuscleSubgroup,
+      );
+    }
+
+    // Show success message and navigate back
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.exerciseId != null
+                ? 'Exercise updated successfully!'
+                : 'Exercise saved successfully!',
+          ),
+        ),
+      );
+      Navigator.pop(context, true);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
       ),
     );
   }
