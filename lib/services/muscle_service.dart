@@ -168,8 +168,27 @@ class MuscleService {
               'soleus': MuscleNode(id: 'soleus', name: 'Soleus'),
             },
           ),
+          'hip_flexors': MuscleNode(
+            id: 'hip_flexors',
+            name: 'Hip Flexors',
+            children: {
+              'iliopsoas': MuscleNode(id: 'iliopsoas', name: 'Iliopsoas'),
+              'sartorius': MuscleNode(id: 'sartorius', name: 'Sartorius'),
+            },
+          ),
         },
       ),
+      'neck': MuscleNode(
+        id: 'neck',
+        name: 'Neck',
+        children: {
+          'sternocleidomastoid': MuscleNode(id: 'sternocleidomastoid', name: 'Sternocleidomastoid'),
+          'scalene': MuscleNode(id: 'scalene', name: 'Scalene'),
+          'levator_scapulae': MuscleNode(id: 'levator_scapulae', name: 'Levator Scapulae'),
+          'splenius_capitis': MuscleNode(id: 'splenius_capitis', name: 'Splenius Capitis'),
+          'splenius_cervicis': MuscleNode(id: 'splenius_cervicis', name: 'Splenius Cervicis'),
+        },
+      )
     };
   }
 
