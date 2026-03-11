@@ -256,11 +256,6 @@ class _Screen5AddExerciseState extends State<Screen5AddExercise> {
       return;
     }
 
-    if (exerciseDescriptionController.text.isEmpty) {
-      _showError('Please enter an exercise description');
-      return;
-    }
-
     if (selectedMuscleCategory == null) {
       _showError('Please select a muscle category');
       return;

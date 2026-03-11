@@ -85,18 +85,20 @@ class ExerciseCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Description',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                if (exercise.description.isNotEmpty) ...[
+                  const Text(
+                    'Description',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  exercise.description,
-                  style: const TextStyle(fontSize: 14),
-                ),
+                  const SizedBox(height: 8),
+                  Text(
+                    exercise.description,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
                 const SizedBox(height: 16),
                 Row(
                   children: [

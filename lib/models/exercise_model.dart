@@ -10,7 +10,7 @@ class ExerciseModel {
   const ExerciseModel({
     required this.id,
     required this.name,
-    required this.description,
+    this.description = "",
     required this.muscleCategoryId,
     required this.muscleGroupId,
     this.muscleSubgroupId
